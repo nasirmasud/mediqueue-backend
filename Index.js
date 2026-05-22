@@ -87,6 +87,13 @@ async function run() {
       const result = await tutors.toArray();
       res.send(result);
     });
+
+    // Create Tutor API
+    app.post("/tutors", async (req, res) => {
+      const tutorData = req.body;
+      const result = await tutorCollection.insertOne(tutorData);
+      res.json(result);
+    });
   } catch (error) {
     console.error(error);
   }
