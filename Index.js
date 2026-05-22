@@ -114,6 +114,15 @@ async function run() {
       });
       res.json(result);
     });
+
+    // Find tutor by creator email
+    app.get("/my-tutors/:email", async (req, res) => {
+      const { email } = req.params;
+      const result = await tutorCollection
+        .find({ tutorEmail: email })
+        .toArray();
+      res.send(result);
+    });
   } catch (error) {
     console.error(error);
   }
