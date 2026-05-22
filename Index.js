@@ -146,6 +146,24 @@ async function run() {
       });
       res.send(result);
     });
+
+    // Dynamic slot Update & Final fine tune
+    app.patch("/tutors/:id/decrease-slot", async (req, res) => {
+      const { id } = req.params;
+      const tutor = await tutorCollection.findOne({ _id: new ObjectId(id) });
+      if (!tutor) {
+        return res.status(404).json({ message: "Tutor not found" });
+      }
+      const currentSlot = Number(tutor.totalSlot);
+      if (isNaN(currentSlot) || currentSlot <= 0) {
+        return res.status(400).json({ message: "No slots available" });
+      }
+      const result = await tutorCollection.updateOne(
+        { _id: new ObjectId(id) },
+        { $set: { totalSlot: currentSlot - 1 } },
+      );
+      res.json(result);
+    });
   } catch (error) {
     console.error(error);
   }
@@ -159,3 +177,5 @@ app.get("/", (req, res) => {
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
+
+module.exports = app;
