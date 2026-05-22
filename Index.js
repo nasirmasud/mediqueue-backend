@@ -49,6 +49,7 @@ async function run() {
     const tutorCollection = db.collection("tutors");
     const tutorBookingCollection = db.collection("tutorBookings");
 
+    // Search & Filtering API
     app.get("/tutors", async (req, res) => {
       const { search, subject, city, price, mode } = req.query;
       const filter = {};
@@ -71,6 +72,20 @@ async function run() {
 
       const tutors = await tutorCollection.find(filter).toArray();
       res.json(tutors);
+    });
+
+    // Single Tutor API
+    app.get("/tutors/:id", async (req, res) => {
+      const { id } = req.params;
+      const result = await tutorCollection.findOne({ _id: new ObjectId(id) });
+      res.json(result);
+    });
+
+    // Featured Tutor API
+    app.get("/featured-tutors", async (req, res) => {
+      const tutors = await tutorCollection.find().limit(6);
+      const result = await tutors.toArray();
+      res.send(result);
     });
   } catch (error) {
     console.error(error);
