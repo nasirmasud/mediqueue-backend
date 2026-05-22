@@ -123,6 +123,29 @@ async function run() {
         .toArray();
       res.send(result);
     });
+
+    // Tutor Booking
+    app.post("/tutor-bookings", verifyToken, async (req, res) => {
+      const bookingData = req.body;
+      const result = await tutorBookingCollection.insertOne(bookingData);
+      res.send(result);
+    });
+
+    app.get("/tutor-bookings/:userId", async (req, res) => {
+      const { userId } = req.params;
+      const result = await tutorBookingCollection
+        .find({ userId: userId })
+        .toArray();
+      res.send(result);
+    });
+
+    app.delete("/tutor-bookings/:bookingId", async (req, res) => {
+      const { bookingId } = req.params;
+      const result = await tutorBookingCollection.deleteOne({
+        _id: new ObjectId(bookingId),
+      });
+      res.send(result);
+    });
   } catch (error) {
     console.error(error);
   }
