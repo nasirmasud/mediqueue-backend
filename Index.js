@@ -94,6 +94,26 @@ async function run() {
       const result = await tutorCollection.insertOne(tutorData);
       res.json(result);
     });
+
+    // Tutor Profile Update
+    app.put("/tutors/:id", async (req, res) => {
+      const { id } = req.params;
+      const updatedData = req.body;
+      const result = await tutorCollection.updateOne(
+        { _id: new ObjectId(id) },
+        { $set: updatedData },
+      );
+      res.json(result);
+    });
+
+    // Tutor Profile Delete
+    app.delete("/tutors/:id", async (req, res) => {
+      const { id } = req.params;
+      const result = await tutorCollection.deleteOne({
+        _id: new ObjectId(id),
+      });
+      res.json(result);
+    });
   } catch (error) {
     console.error(error);
   }
